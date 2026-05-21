@@ -1,0 +1,43 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ReadMarketL1",
+      "Effect": "Allow",
+      "Action": ["s3:GetObject", "s3:ListBucket"],
+      "Resource": [
+        "arn:aws:s3:::nangman-crypto-dev-market-ingest-l1-962214",
+        "arn:aws:s3:::nangman-crypto-dev-market-ingest-l1-962214/*"
+      ]
+    },
+    {
+      "Sid": "WriteIntelL1",
+      "Effect": "Allow",
+      "Action": ["s3:GetObject", "s3:PutObject", "s3:ListBucket"],
+      "Resource": [
+        "arn:aws:s3:::nangman-crypto-dev-intel-structuring-l1-962214",
+        "arn:aws:s3:::nangman-crypto-dev-intel-structuring-l1-962214/*"
+      ]
+    },
+    {
+      "Sid": "InvokeBedrockModels",
+      "Effect": "Allow",
+      "Action": ["bedrock:InvokeModel", "bedrock:InvokeModelWithResponseStream"],
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "aws:RequestedRegion": "ap-northeast-2"
+        }
+      }
+    },
+    {
+      "Sid": "ReadRustfsSecrets",
+      "Effect": "Allow",
+      "Action": ["secretsmanager:GetSecretValue"],
+      "Resource": [
+        "arn:aws:secretsmanager:ap-northeast-2:791444962214:secret:REPLACE_WITH_RUSTFS_ACCESS_KEY*",
+        "arn:aws:secretsmanager:ap-northeast-2:791444962214:secret:REPLACE_WITH_RUSTFS_SECRET_KEY*"
+      ]
+    }
+  ]
+}

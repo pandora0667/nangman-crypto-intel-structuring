@@ -1,0 +1,69 @@
+name: nangman-crypto-intel-structuring
+
+x-intel-structuring-common: &intel-structuring-common
+  build:
+    context: ${INTEL_STRUCTURING_REPO_ROOT:-/opt/nangman-crypto}
+    dockerfile: ${INTEL_STRUCTURING_REPO_ROOT:-/opt/nangman-crypto}/apps/intel-structuring-app/Dockerfile
+  image: nangman-crypto-intel-structuring-app:dev
+  restart: unless-stopped
+  read_only: true
+  cap_drop:
+    - ALL
+  security_opt:
+    - no-new-privileges:true
+  environment:
+    AWS_REGION: ${AWS_REGION:-ap-northeast-2}
+    AWS_DEFAULT_REGION: ${AWS_REGION:-ap-northeast-2}
+    AWS_EC2_METADATA_DISABLED: ${AWS_EC2_METADATA_DISABLED:-false}
+    INTEL_L1_L0_RUSTFS_ACCESS_KEY_ID: ${INTEL_L1_L0_RUSTFS_ACCESS_KEY_ID}
+    INTEL_L1_L0_RUSTFS_SECRET_ACCESS_KEY: ${INTEL_L1_L0_RUSTFS_SECRET_ACCESS_KEY}
+    INTEL_L1_L0_RUSTFS_ENDPOINT: ${INTEL_L1_L0_RUSTFS_ENDPOINT:-https://s3.nangman.cloud}
+    INTEL_L1_L0_RUSTFS_BUCKET: ${INTEL_L1_L0_RUSTFS_BUCKET:-intel-crawl-app-l0}
+    INTEL_L1_L0_RUSTFS_REGION: ${INTEL_L1_L0_RUSTFS_REGION:-us-east-1}
+    INTEL_L1_L0_RUSTFS_FORCE_PATH_STYLE: ${INTEL_L1_L0_RUSTFS_FORCE_PATH_STYLE:-true}
+    INTEL_L1_OUTPUT_S3_BUCKET: ${INTEL_L1_OUTPUT_S3_BUCKET:-nangman-crypto-dev-intel-structuring-l1-962214}
+    INTEL_L1_OUTPUT_S3_REGION: ${INTEL_L1_OUTPUT_S3_REGION:-ap-northeast-2}
+    INTEL_L1_MARKET_L1_BUCKET: ${INTEL_L1_MARKET_L1_BUCKET:-nangman-crypto-dev-market-ingest-l1-962214}
+    INTEL_L1_MARKET_S3_REGION: ${INTEL_L1_MARKET_S3_REGION:-ap-northeast-2}
+    INTEL_L1_ENABLE_BEDROCK: ${INTEL_L1_ENABLE_BEDROCK:-false}
+    BEDROCK_REGION: ${BEDROCK_REGION:-ap-northeast-2}
+    INTEL_L1_PRIMARY_MODEL_ID: ${INTEL_L1_PRIMARY_MODEL_ID:-global.anthropic.claude-haiku-4-5-20251001-v1:0}
+    INTEL_L1_ESCALATION_MODEL_ID: ${INTEL_L1_ESCALATION_MODEL_ID:-global.anthropic.claude-sonnet-4-6}
+    INTEL_L1_ESCALATE_IF_CONFIDENCE_BELOW: ${INTEL_L1_ESCALATE_IF_CONFIDENCE_BELOW:-0.65}
+    INTEL_L1_SONNET_BUDGET_RATIO: ${INTEL_L1_SONNET_BUDGET_RATIO:-0.15}
+    INTEL_L1_OUTPUT_STREAM_MAX_AGE_SECS: ${INTEL_L1_OUTPUT_STREAM_MAX_AGE_SECS:-1209600}
+    INTEL_L1_OUTPUT_STREAM_DUPLICATE_WINDOW_SECS: ${INTEL_L1_OUTPUT_STREAM_DUPLICATE_WINDOW_SECS:-86400}
+    INTEL_L1_RAW_ACK_WAIT_SECS: ${INTEL_L1_RAW_ACK_WAIT_SECS:-300}
+    INTEL_L1_RAW_MAX_DELIVER: ${INTEL_L1_RAW_MAX_DELIVER:-20}
+    INTEL_L1_RAW_BATCH_SIZE: ${INTEL_L1_RAW_BATCH_SIZE:-1}
+    INTEL_L1_STORY_MEMBER_SCAN_LIMIT: ${INTEL_L1_STORY_MEMBER_SCAN_LIMIT:-128}
+  networks:
+    - nangman-crypto-bus
+
+services:
+  worker:
+    <<: *intel-structuring-common
+    command:
+      - --nats-url
+      - ${NATS_URL:-nats://nats:4222}
+      - --raw-stream
+      - ${INTEL_L1_RAW_NATS_STREAM:-RAW_INTEL}
+      - --raw-subject
+      - ${INTEL_L1_RAW_NATS_SUBJECT:-raw_intel_event.created}
+      - --raw-consumer
+      - ${INTEL_L1_RAW_NATS_CONSUMER:-intel-structuring-l1}
+      - --structured-stream
+      - ${INTEL_L1_OUTPUT_NATS_STREAM:-STRUCTURED_INTEL}
+      - --structured-packet-subject
+      - ${INTEL_L1_STRUCTURED_PACKET_SUBJECT:-structured_intel_packet.created}
+      - --context-flag-subject
+      - ${INTEL_L1_CONTEXT_FLAG_SUBJECT:-context_flag_packet.created}
+      - --health-subject
+      - ${INTEL_L1_HEALTH_SUBJECT:-structuring_health_event.created}
+      - --ensure-output-stream
+      - ${INTEL_L1_ENSURE_OUTPUT_STREAM:-true}
+
+networks:
+  nangman-crypto-bus:
+    external: true
+    name: ${NANGMAN_NATS_DOCKER_NETWORK:-nangman-crypto-bus}
