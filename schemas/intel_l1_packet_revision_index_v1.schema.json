@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nangman.local/contracts/intel/intel_l1_packet_revision_index_v1.schema.json",
+  "title": "Intel L1 Packet Revision Index v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "packet_family_id",
+    "raw_event_id",
+    "latest_revision",
+    "latest_packet_id",
+    "latest_structured_key",
+    "market_context_status",
+    "updated_at_ms"
+  ],
+  "properties": {
+    "schema_version": { "const": "intel_l1_packet_revision_index_v1" },
+    "packet_family_id": { "type": "string", "minLength": 1 },
+    "raw_event_id": { "type": "string", "minLength": 1 },
+    "latest_revision": { "type": "integer", "minimum": 0 },
+    "latest_packet_id": { "type": "string", "minLength": 1 },
+    "latest_structured_key": { "type": "string", "minLength": 1 },
+    "market_context_status": {
+      "type": "string",
+      "enum": [
+        "available",
+        "available_symbol_context",
+        "available_general_context",
+        "nearest_available",
+        "symbol_context_only",
+        "stale_but_usable",
+        "pending",
+        "unavailable"
+      ]
+    },
+    "updated_at_ms": { "type": "integer" }
+  }
+}

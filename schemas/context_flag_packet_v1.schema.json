@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nangman.local/contracts/intel/context_flag_packet_v1.schema.json",
+  "title": "Context Flag Packet v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "flag_packet_id",
+    "packet_id",
+    "cluster_id",
+    "normalized_symbols",
+    "observe_only",
+    "block_new_entries",
+    "reduce_only",
+    "paper_only",
+    "context_flag",
+    "risk_flag",
+    "regime_flag",
+    "scenario_flag",
+    "time_relevance_window",
+    "flag_confidence_band",
+    "reason_summary",
+    "model_tier_used",
+    "schema_version"
+  ],
+  "properties": {
+    "flag_packet_id": { "type": "string", "minLength": 1 },
+    "packet_id": { "type": "string", "minLength": 1 },
+    "cluster_id": { "type": "string", "minLength": 1 },
+    "normalized_symbols": { "type": "array", "items": { "type": "string" } },
+    "observe_only": { "type": "boolean" },
+    "block_new_entries": { "type": "boolean" },
+    "reduce_only": { "type": "boolean" },
+    "paper_only": { "type": "boolean" },
+    "context_flag": { "type": "string" },
+    "risk_flag": { "type": "string" },
+    "regime_flag": { "type": "string" },
+    "scenario_flag": { "type": "string" },
+    "time_relevance_window": { "$ref": "#/$defs/time_relevance_window" },
+    "flag_confidence_band": { "$ref": "#/$defs/confidence_band" },
+    "reason_summary": { "type": "string" },
+    "model_tier_used": {
+      "type": "string",
+      "enum": ["rule_only", "haiku", "sonnet", "fallback_only"]
+    },
+    "schema_version": { "const": "context_flag_packet_v1" }
+  },
+  "$defs": {
+    "confidence_band": {
+      "type": "string",
+      "enum": ["weak", "low", "moderate", "medium", "strong", "high"]
+    },
+    "time_relevance_window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start_ms", "end_ms", "relevance_decay_hint"],
+      "properties": {
+        "start_ms": { "type": "integer" },
+        "end_ms": { "type": "integer" },
+        "relevance_decay_hint": {
+          "type": "string",
+          "enum": ["minutes", "hours", "day", "multi_day", "structural"]
+        }
+      }
+    }
+  }
+}

@@ -2,6 +2,7 @@ use crate::models::constants::{
     CONTEXT_FLAG_SCHEMA_VERSION, HEALTH_EVENT_SCHEMA_VERSION, INDEX_POINTER_SCHEMA_VERSION,
     MANIFEST_SCHEMA_VERSION, PACKET_REVISION_INDEX_SCHEMA_VERSION, QUARANTINE_SCHEMA_VERSION,
     STORY_CLUSTER_SCHEMA_VERSION, STORY_MEMBER_SCHEMA_VERSION, STRUCTURED_PACKET_SCHEMA_VERSION,
+    STRUCTURED_POINTER_SCHEMA_VERSION,
 };
 use crate::models::market::{MarketContextSnapshot, MarketContextStatus};
 use serde::{Deserialize, Serialize};
@@ -408,6 +409,12 @@ pub struct StructuredPointer {
     pub storage_ref: S3ObjectPointer,
     pub manifest_key: String,
     pub created_at_ms: i64,
+}
+
+impl StructuredPointer {
+    pub fn schema() -> String {
+        STRUCTURED_POINTER_SCHEMA_VERSION.to_owned()
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]

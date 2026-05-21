@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nangman.local/contracts/intel/story_cluster_v1.schema.json",
+  "title": "Story Cluster v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "cluster_id",
+    "source_event_ids",
+    "story_hint_key",
+    "primary_topic",
+    "secondary_topics",
+    "related_symbols",
+    "source_count",
+    "trust_mix",
+    "first_published_at_ms",
+    "last_updated_at_ms",
+    "novelty_score",
+    "conflict_level",
+    "conflicting_source_ids",
+    "resolution_summary",
+    "schema_version"
+  ],
+  "properties": {
+    "cluster_id": { "type": "string", "minLength": 1 },
+    "source_event_ids": { "type": "array", "items": { "type": "string" } },
+    "story_hint_key": { "type": "string", "minLength": 1 },
+    "primary_topic": { "type": "string" },
+    "secondary_topics": { "type": "array", "items": { "type": "string" } },
+    "related_symbols": { "type": "array", "items": { "type": "string" } },
+    "source_count": { "type": "integer", "minimum": 0 },
+    "trust_mix": { "type": "string" },
+    "first_published_at_ms": { "type": ["integer", "null"] },
+    "last_updated_at_ms": { "type": "integer" },
+    "novelty_score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "conflict_level": { "type": "string", "enum": ["none", "low", "medium", "high"] },
+    "conflicting_source_ids": { "type": "array", "items": { "type": "string" } },
+    "resolution_summary": { "type": "string" },
+    "schema_version": { "const": "story_cluster_v1" }
+  }
+}

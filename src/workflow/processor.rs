@@ -301,7 +301,7 @@ where
             .await?;
 
         let structured_pointer = StructuredPointer {
-            schema_version: STRUCTURED_PACKET_SCHEMA_VERSION.to_owned(),
+            schema_version: StructuredPointer::schema(),
             packet_id: packet_set.structured_packet.packet_id.clone(),
             raw_event_id: raw_event.event_id.clone(),
             terminal_decision: packet_set.structured_packet.terminal_decision.clone(),
@@ -318,7 +318,7 @@ where
             (&packet_set.context_flag_packet, &flag_key, &flag_bytes)
         {
             Some(StructuredPointer {
-                schema_version: CONTEXT_FLAG_SCHEMA_VERSION.to_owned(),
+                schema_version: StructuredPointer::schema(),
                 packet_id: context_flag_packet.flag_packet_id.clone(),
                 raw_event_id: raw_event.event_id.clone(),
                 terminal_decision: packet_set.structured_packet.terminal_decision.clone(),

@@ -9,6 +9,7 @@ pub const QUARANTINE_SCHEMA_VERSION: &str = "intel_l1_quarantine_event_v1";
 pub const MANIFEST_SCHEMA_VERSION: &str = "intel_l1_manifest_v1";
 pub const INDEX_POINTER_SCHEMA_VERSION: &str = "intel_l1_index_pointer_v1";
 pub const PACKET_REVISION_INDEX_SCHEMA_VERSION: &str = "intel_l1_packet_revision_index_v1";
+pub const STRUCTURED_POINTER_SCHEMA_VERSION: &str = "structured_pointer_v1";
 pub const MARKET_L1_POINTER_SCHEMA_VERSION: &str = "l1_index_pointer_v1";
 pub const MARKET_L1_MANIFEST_SCHEMA_VERSION: &str = "l1_manifest_v1";
 pub const MARKET_L1_REPORT_SCHEMA_VERSION: &str = "normalization_report_v1";

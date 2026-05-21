@@ -73,6 +73,19 @@ docker buildx build --platform linux/arm64 -t intel-structuring-app:local --load
 
 The GitHub Actions workflow runs formatting, tests, clippy, coverage generation, SonarQube scan, and SonarQube Quality Gate on `main`.
 
+## Machine-readable contracts
+
+The stable INTEL-L1 boundary is checked into the repository:
+
+```text
+schemas/*.schema.json
+asyncapi/nats.asyncapi.json
+```
+
+JSON Schema Draft 2020-12 files define S3/RustFS payload contracts for raw pointers, structured packets, context flags, story clusters, health events, manifests, index pointers, packet revision indexes, and structured object pointers.
+
+The AsyncAPI 3.0 contract defines the NATS subjects this app consumes and publishes. NATS is only a pointer/event bus; S3/RustFS remains the canonical durable store. Contract tests run with `cargo test --all-targets`, so schema version drift, missing subjects, or accidental trading-decision semantics fail CI.
+
 ## Runtime prerequisites
 
 ```text

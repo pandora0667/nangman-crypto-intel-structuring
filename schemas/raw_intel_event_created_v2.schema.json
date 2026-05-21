@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nangman.local/contracts/intel/raw_intel_event_created_v2.schema.json",
+  "title": "Raw Intel Event Created Pointer v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "event_id",
+    "source_id",
+    "source_category",
+    "fetched_at_ms",
+    "published_at_ms",
+    "created_at_ms",
+    "content_hash",
+    "dedup_key",
+    "symbol_candidates",
+    "top50_relevance",
+    "storage_ref"
+  ],
+  "properties": {
+    "schema_version": { "const": "raw_intel_event_created_v2" },
+    "event_id": { "type": "string", "minLength": 1 },
+    "source_id": { "type": "string", "minLength": 1 },
+    "source_category": { "type": "string", "minLength": 1 },
+    "fetched_at_ms": { "type": "integer" },
+    "published_at_ms": { "type": ["integer", "null"] },
+    "created_at_ms": { "type": "integer" },
+    "content_hash": { "type": "string", "minLength": 1 },
+    "dedup_key": { "type": "string", "minLength": 1 },
+    "symbol_candidates": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "top50_relevance": { "type": "string", "minLength": 1 },
+    "storage_ref": { "$ref": "#/$defs/raw_intel_event_storage_ref" }
+  },
+  "$defs": {
+    "raw_intel_event_storage_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "endpoint_alias",
+        "bucket",
+        "key",
+        "line_number",
+        "byte_offset",
+        "byte_length",
+        "content_sha256"
+      ],
+      "properties": {
+        "kind": { "const": "rustfs_jsonl_record" },
+        "endpoint_alias": { "type": "string", "minLength": 1 },
+        "bucket": { "type": "string", "minLength": 1 },
+        "key": { "type": "string", "minLength": 1 },
+        "line_number": { "type": "integer", "minimum": 0 },
+        "byte_offset": { "type": "integer", "minimum": 0 },
+        "byte_length": { "type": "integer", "minimum": 1 },
+        "content_sha256": { "type": "string", "pattern": "^sha256:" }
+      }
+    }
+  }
+}

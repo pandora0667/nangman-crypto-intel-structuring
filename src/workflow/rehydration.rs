@@ -238,7 +238,7 @@ impl PendingMarketContextRehydrator {
             .await?;
 
         let pointer = StructuredPointer {
-            schema_version: STRUCTURED_PACKET_SCHEMA_VERSION.to_owned(),
+            schema_version: StructuredPointer::schema(),
             packet_id,
             raw_event_id,
             terminal_decision: revised_packet.terminal_decision.clone(),
@@ -297,7 +297,7 @@ mod tests {
     fn parses_revision_index_key() {
         assert_eq!(
             parse_revision_from_key(
-                "packet-revision-index/schema=packet_revision_index_v1/packet_family_id=family_1/revision=0000000007.json"
+                "packet-revision-index/schema=intel_l1_packet_revision_index_v1/packet_family_id=family_1/revision=0000000007.json"
             ),
             Some(7)
         );

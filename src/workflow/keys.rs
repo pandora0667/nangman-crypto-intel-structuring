@@ -1,7 +1,7 @@
 use crate::models::constants::{
     CONTEXT_FLAG_SCHEMA_VERSION, HEALTH_EVENT_SCHEMA_VERSION, INDEX_POINTER_SCHEMA_VERSION,
-    MANIFEST_SCHEMA_VERSION, QUARANTINE_SCHEMA_VERSION, STORY_CLUSTER_SCHEMA_VERSION,
-    STORY_MEMBER_SCHEMA_VERSION, STRUCTURED_PACKET_SCHEMA_VERSION,
+    MANIFEST_SCHEMA_VERSION, PACKET_REVISION_INDEX_SCHEMA_VERSION, QUARANTINE_SCHEMA_VERSION,
+    STORY_CLUSTER_SCHEMA_VERSION, STORY_MEMBER_SCHEMA_VERSION, STRUCTURED_PACKET_SCHEMA_VERSION,
 };
 use crate::time::time_part;
 
@@ -94,7 +94,7 @@ pub fn prepared_index_key(raw_event_id: &str, policy_version: &str) -> String {
 
 pub fn packet_revision_index_prefix(packet_family_id: &str) -> String {
     format!(
-        "packet-revision-index/schema=packet_revision_index_v1/packet_family_id={}/",
+        "packet-revision-index/schema={PACKET_REVISION_INDEX_SCHEMA_VERSION}/packet_family_id={}/",
         path_segment(packet_family_id)
     )
 }

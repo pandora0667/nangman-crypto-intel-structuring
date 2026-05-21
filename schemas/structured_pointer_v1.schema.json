@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nangman.local/contracts/intel/structured_pointer_v1.schema.json",
+  "title": "Structured Pointer v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "packet_id",
+    "raw_event_id",
+    "terminal_decision",
+    "storage_ref",
+    "manifest_key",
+    "created_at_ms"
+  ],
+  "properties": {
+    "schema_version": { "const": "structured_pointer_v1" },
+    "packet_id": { "type": "string", "minLength": 1 },
+    "raw_event_id": { "type": "string", "minLength": 1 },
+    "terminal_decision": {
+      "type": "string",
+      "enum": [
+        "high_confidence_structured",
+        "low_confidence_structured",
+        "general_market_context",
+        "conflicted",
+        "unsupported_or_weak",
+        "irrelevant_or_noise",
+        "quarantine_only"
+      ]
+    },
+    "storage_ref": { "$ref": "#/$defs/s3_object_pointer" },
+    "manifest_key": { "type": "string", "minLength": 1 },
+    "created_at_ms": { "type": "integer" }
+  },
+  "$defs": {
+    "s3_object_pointer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bucket", "key", "content_sha256", "schema_version"],
+      "properties": {
+        "bucket": { "type": "string", "minLength": 1 },
+        "key": { "type": "string", "minLength": 1 },
+        "content_sha256": { "type": "string", "pattern": "^sha256:" },
+        "schema_version": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

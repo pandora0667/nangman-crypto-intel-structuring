@@ -1,0 +1,317 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nangman.local/contracts/intel/structured_intel_packet_v1.schema.json",
+  "title": "Structured Intel Packet v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "packet_id",
+    "packet_family_id",
+    "raw_event_id",
+    "event_timestamp_ms",
+    "revision",
+    "supersedes_packet_id",
+    "cluster_id",
+    "source_event_ids",
+    "published_at_ms",
+    "fetched_at_ms",
+    "structured_at_ms",
+    "decision_available_at_ms",
+    "normalized_symbols",
+    "symbol_confidence_band",
+    "symbol_resolution_trace",
+    "event_type",
+    "topic_summary",
+    "stance_summary",
+    "risk_summary",
+    "regime_hint",
+    "scenario_hint",
+    "confidence_band",
+    "novelty_score",
+    "time_relevance_window",
+    "contradiction_flags",
+    "source_quality_summary",
+    "source_independence_summary",
+    "text_evidence",
+    "metric_evidence",
+    "evidence_quality_reasons",
+    "market_context_status",
+    "market_context_retry_after_ms",
+    "market_context_expire_at_ms",
+    "market_context_terminal_reason",
+    "market_context_ref",
+    "model_tier_used",
+    "terminal_decision",
+    "evidence_sentences",
+    "market_context",
+    "schema_version"
+  ],
+  "properties": {
+    "packet_id": { "type": "string", "minLength": 1 },
+    "packet_family_id": { "type": "string" },
+    "raw_event_id": { "type": "string" },
+    "event_timestamp_ms": { "type": "integer" },
+    "revision": { "type": "integer", "minimum": 0 },
+    "supersedes_packet_id": { "type": ["string", "null"] },
+    "cluster_id": { "type": "string", "minLength": 1 },
+    "source_event_ids": { "type": "array", "items": { "type": "string" } },
+    "published_at_ms": { "type": ["integer", "null"] },
+    "fetched_at_ms": { "type": "integer" },
+    "structured_at_ms": { "type": "integer" },
+    "decision_available_at_ms": { "type": "integer" },
+    "normalized_symbols": { "type": "array", "items": { "type": "string" } },
+    "symbol_confidence_band": { "$ref": "#/$defs/confidence_band" },
+    "symbol_resolution_trace": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/symbol_resolution_trace" }
+    },
+    "event_type": { "$ref": "#/$defs/event_type" },
+    "topic_summary": { "type": "string" },
+    "stance_summary": { "type": "string" },
+    "risk_summary": { "type": "string" },
+    "regime_hint": { "type": "string" },
+    "scenario_hint": { "type": "string" },
+    "confidence_band": { "$ref": "#/$defs/confidence_band" },
+    "novelty_score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "time_relevance_window": { "$ref": "#/$defs/time_relevance_window" },
+    "contradiction_flags": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/contradiction_flag" }
+    },
+    "source_quality_summary": { "type": "string" },
+    "source_independence_summary": { "$ref": "#/$defs/source_independence_summary" },
+    "text_evidence": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/text_evidence" }
+    },
+    "metric_evidence": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/metric_evidence" }
+    },
+    "evidence_quality_reasons": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidence_quality_reason" }
+    },
+    "market_context_status": { "$ref": "#/$defs/market_context_status" },
+    "market_context_retry_after_ms": { "type": ["integer", "null"] },
+    "market_context_expire_at_ms": { "type": ["integer", "null"] },
+    "market_context_terminal_reason": { "type": ["string", "null"] },
+    "market_context_ref": { "$ref": "#/$defs/market_context_ref" },
+    "model_tier_used": { "$ref": "#/$defs/model_tier_used" },
+    "terminal_decision": { "$ref": "#/$defs/terminal_decision" },
+    "evidence_sentences": { "type": "array", "items": { "type": "string" } },
+    "market_context": { "$ref": "#/$defs/market_context_snapshot" },
+    "schema_version": { "const": "structured_intel_packet_v1" }
+  },
+  "$defs": {
+    "confidence_band": {
+      "type": "string",
+      "enum": ["weak", "low", "moderate", "medium", "strong", "high"]
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "listing",
+        "delisting",
+        "deposit_withdrawal",
+        "incident",
+        "partnership",
+        "token_unlock",
+        "governance",
+        "funding_shift",
+        "macro_event",
+        "regulatory",
+        "social_backlash",
+        "social_hype",
+        "other"
+      ]
+    },
+    "contradiction_flag": {
+      "type": "string",
+      "enum": [
+        "time_mismatch",
+        "symbol_ambiguity",
+        "source_claim_conflict",
+        "rumor_vs_official",
+        "title_body_mismatch",
+        "evidence_weak"
+      ]
+    },
+    "evidence_quality_reason": {
+      "type": "string",
+      "enum": [
+        "baseline_missing",
+        "single_numeric_snapshot",
+        "single_source_only",
+        "title_only",
+        "symbol_ambiguous",
+        "market_context_missing",
+        "duplicate_or_syndicated_source"
+      ]
+    },
+    "market_context_status": {
+      "type": "string",
+      "enum": [
+        "available",
+        "available_symbol_context",
+        "available_general_context",
+        "nearest_available",
+        "symbol_context_only",
+        "stale_but_usable",
+        "pending",
+        "unavailable"
+      ]
+    },
+    "model_tier_used": {
+      "type": "string",
+      "enum": ["rule_only", "haiku", "sonnet", "fallback_only"]
+    },
+    "terminal_decision": {
+      "type": "string",
+      "enum": [
+        "high_confidence_structured",
+        "low_confidence_structured",
+        "general_market_context",
+        "conflicted",
+        "unsupported_or_weak",
+        "irrelevant_or_noise",
+        "quarantine_only"
+      ]
+    },
+    "time_relevance_window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start_ms", "end_ms", "relevance_decay_hint"],
+      "properties": {
+        "start_ms": { "type": "integer" },
+        "end_ms": { "type": "integer" },
+        "relevance_decay_hint": {
+          "type": "string",
+          "enum": ["minutes", "hours", "day", "multi_day", "structural"]
+        }
+      }
+    },
+    "symbol_resolution_trace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "raw_mentions",
+        "resolved_project",
+        "resolved_asset",
+        "canonical_symbol",
+        "venue_symbols",
+        "mapping_confidence",
+        "ambiguity_reason"
+      ],
+      "properties": {
+        "raw_mentions": { "type": "array", "items": { "type": "string" } },
+        "resolved_project": { "type": ["string", "null"] },
+        "resolved_asset": { "type": ["string", "null"] },
+        "canonical_symbol": { "type": ["string", "null"] },
+        "venue_symbols": { "type": "array", "items": { "type": "string" } },
+        "mapping_confidence": { "$ref": "#/$defs/confidence_band" },
+        "ambiguity_reason": { "type": ["string", "null"] }
+      }
+    },
+    "source_independence_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_event_count",
+        "independent_source_count",
+        "official_source_present",
+        "duplicate_content_hashes",
+        "syndicated_from",
+        "original_source_ids"
+      ],
+      "properties": {
+        "source_event_count": { "type": "integer", "minimum": 0 },
+        "independent_source_count": { "type": "integer", "minimum": 0 },
+        "official_source_present": { "type": "boolean" },
+        "duplicate_content_hashes": { "type": "array", "items": { "type": "string" } },
+        "syndicated_from": { "type": ["string", "null"] },
+        "original_source_ids": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "text_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_text",
+        "source_event_id",
+        "source_id",
+        "published_at_ms",
+        "evidence_kind"
+      ],
+      "properties": {
+        "evidence_text": { "type": "string" },
+        "source_event_id": { "type": "string", "minLength": 1 },
+        "source_id": { "type": "string", "minLength": 1 },
+        "published_at_ms": { "type": ["integer", "null"] },
+        "evidence_kind": { "type": "string", "minLength": 1 }
+      }
+    },
+    "metric_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "metric_name",
+        "symbol",
+        "venue",
+        "value",
+        "previous_value",
+        "delta_pct",
+        "window_ms",
+        "observed_at_ms",
+        "source_event_id"
+      ],
+      "properties": {
+        "metric_name": { "type": "string", "minLength": 1 },
+        "symbol": { "type": ["string", "null"] },
+        "venue": { "type": ["string", "null"] },
+        "value": { "type": ["number", "null"] },
+        "previous_value": { "type": ["number", "null"] },
+        "delta_pct": { "type": ["number", "null"] },
+        "window_ms": { "type": ["integer", "null"] },
+        "observed_at_ms": { "type": "integer" },
+        "source_event_id": { "type": "string", "minLength": 1 }
+      }
+    },
+    "market_context_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "basis_timestamp_ms",
+        "basis_kind",
+        "window_start_ms",
+        "window_end_ms",
+        "manifest_key",
+        "output_object_keys",
+        "market_data_quality_summary_key",
+        "market_feature_delta_key",
+        "market_feature_delta_summary_key",
+        "market_regime_context_key",
+        "symbol_universe_snapshot_key"
+      ],
+      "properties": {
+        "status": { "$ref": "#/$defs/market_context_status" },
+        "basis_timestamp_ms": { "type": ["integer", "null"] },
+        "basis_kind": { "type": "string" },
+        "window_start_ms": { "type": ["integer", "null"] },
+        "window_end_ms": { "type": ["integer", "null"] },
+        "manifest_key": { "type": ["string", "null"] },
+        "output_object_keys": { "type": "array", "items": { "type": "string" } },
+        "market_data_quality_summary_key": { "type": ["string", "null"] },
+        "market_feature_delta_key": { "type": ["string", "null"] },
+        "market_feature_delta_summary_key": { "type": ["string", "null"] },
+        "market_regime_context_key": { "type": ["string", "null"] },
+        "symbol_universe_snapshot_key": { "type": ["string", "null"] }
+      }
+    },
+    "market_context_snapshot": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}

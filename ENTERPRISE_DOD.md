@@ -25,5 +25,8 @@ The app is not complete until all items pass:
 - SIGTERM does not acknowledge an incomplete message.
 - Duplicate redelivery only skips when the success index exists; prepared-only runs are retried.
 - Duplicate redelivery reuses deterministic keys and does not create duplicate S3 output.
+- JSON Schema Draft 2020-12 contracts exist for the stable INTEL-L1 S3/RustFS payloads.
+- AsyncAPI 3.0 contract exists for RAW_INTEL consume and STRUCTURED_INTEL publish subjects.
+- Contract tests fail CI on schema version drift, missing NATS subjects, or forbidden trading-decision semantics.
 - Forbidden trade output terms are blocked.
 - Unit, integration, failure, duplicate, schema, and Docker build checks pass.

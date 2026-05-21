@@ -1,0 +1,151 @@
+{
+  "asyncapi": "3.0.0",
+  "info": {
+    "title": "Nangman Crypto Intel L1 NATS Contract",
+    "version": "1.0.0",
+    "description": "NATS is a pointer/event bus. S3/RustFS object storage is the durable source of truth."
+  },
+  "servers": {
+    "nats": {
+      "host": "{nats_host}:{nats_port}",
+      "protocol": "nats",
+      "description": "On-prem NATS endpoint reachable over VPN or trusted LAN routing.",
+      "variables": {
+        "nats_host": {
+          "default": "192.168.10.45"
+        },
+        "nats_port": {
+          "default": "4222"
+        }
+      }
+    }
+  },
+  "channels": {
+    "rawIntelEventCreated": {
+      "address": "raw_intel_event.created",
+      "messages": {
+        "rawIntelEventCreated": {
+          "$ref": "#/components/messages/rawIntelEventCreated"
+        }
+      }
+    },
+    "structuredIntelPacketCreated": {
+      "address": "structured_intel_packet.created",
+      "messages": {
+        "structuredPointer": {
+          "$ref": "#/components/messages/structuredPointer"
+        }
+      }
+    },
+    "contextFlagPacketCreated": {
+      "address": "context_flag_packet.created",
+      "messages": {
+        "structuredPointer": {
+          "$ref": "#/components/messages/structuredPointer"
+        }
+      }
+    },
+    "structuringHealthEventCreated": {
+      "address": "structuring_health_event.created",
+      "messages": {
+        "structuringHealthEvent": {
+          "$ref": "#/components/messages/structuringHealthEvent"
+        }
+      }
+    }
+  },
+  "operations": {
+    "consumeRawIntelEventCreated": {
+      "action": "receive",
+      "channel": {
+        "$ref": "#/channels/rawIntelEventCreated"
+      },
+      "messages": [
+        {
+          "$ref": "#/channels/rawIntelEventCreated/messages/rawIntelEventCreated"
+        }
+      ]
+    },
+    "publishStructuredIntelPacketCreated": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/structuredIntelPacketCreated"
+      },
+      "messages": [
+        {
+          "$ref": "#/channels/structuredIntelPacketCreated/messages/structuredPointer"
+        }
+      ]
+    },
+    "publishContextFlagPacketCreated": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/contextFlagPacketCreated"
+      },
+      "messages": [
+        {
+          "$ref": "#/channels/contextFlagPacketCreated/messages/structuredPointer"
+        }
+      ]
+    },
+    "publishStructuringHealthEventCreated": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/structuringHealthEventCreated"
+      },
+      "messages": [
+        {
+          "$ref": "#/channels/structuringHealthEventCreated/messages/structuringHealthEvent"
+        }
+      ]
+    }
+  },
+  "components": {
+    "messages": {
+      "rawIntelEventCreated": {
+        "name": "raw_intel_event_created_v2",
+        "title": "Raw Intel Event Created Pointer",
+        "contentType": "application/json",
+        "payload": {
+          "$ref": "../schemas/raw_intel_event_created_v2.schema.json"
+        }
+      },
+      "structuredPointer": {
+        "name": "structured_pointer_v1",
+        "title": "Structured Intel Object Pointer",
+        "contentType": "application/json",
+        "headers": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "Nats-Msg-Id": {
+              "type": "string",
+              "description": "Deterministic id: packet_id, flag_packet_id, or health_event_id."
+            }
+          }
+        },
+        "payload": {
+          "$ref": "../schemas/structured_pointer_v1.schema.json"
+        }
+      },
+      "structuringHealthEvent": {
+        "name": "structuring_health_event_v1",
+        "title": "Structuring Health Event",
+        "contentType": "application/json",
+        "payload": {
+          "$ref": "../schemas/structuring_health_event_v1.schema.json"
+        }
+      }
+    }
+  },
+  "x-nangman-contract": {
+    "canonical_store": "s3_or_rustfs",
+    "event_bus": "nats_jetstream",
+    "raw_ack_rule": "ack raw input only after S3 writes, NATS publish ack, success index write, and flush complete",
+    "forbidden_semantics": [
+      "order intent",
+      "position sizing",
+      "live trading approval"
+    ]
+  }
+}
