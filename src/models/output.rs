@@ -456,3 +456,13 @@ impl QuarantineEvent {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn structured_pointer_has_own_schema_version() {
+        assert_eq!(StructuredPointer::schema(), "structured_pointer_v1");
+    }
+}

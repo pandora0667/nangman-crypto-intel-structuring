@@ -175,4 +175,12 @@ mod tests {
             "story-members/schema=story_member_v1/story_hint_key=hint_1/policy=policy_1/raw_event_id=raw_e.json"
         );
     }
+
+    #[test]
+    fn packet_revision_index_key_uses_contract_schema_version() {
+        assert_eq!(
+            packet_revision_index_key("family/1", 7),
+            "packet-revision-index/schema=intel_l1_packet_revision_index_v1/packet_family_id=family_1/revision=0000000007.json"
+        );
+    }
 }
